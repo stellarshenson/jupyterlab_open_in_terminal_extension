@@ -10,6 +10,8 @@
 
 Open any folder from the file browser directly in a terminal. Right-click on a folder and select "Open in Terminal" to launch a new terminal session with that directory as the working directory.
 
+![Open in Terminal](.resources/screenshot.png)
+
 ## Features
 
 - **Context menu on folders** - Right-click any folder in the file browser to reveal "Open in Terminal" option with terminal icon
