@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.5.1
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: konrad.jelen@gmail.com
+author_name: Stellars Henson
+has_ai_rules: false
+has_binder: false
+has_settings: false
+kind: frontend
+labextension_name: jupyterlab_open_in_terminal_extension
+project_short_description: Jupyterlab extension that adds item to the context menu
+    in the file browser to open folder in terminal
+python_name: jupyterlab_open_in_terminal_extension
+repository: ''
+test: true
+
