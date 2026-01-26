@@ -24,6 +24,7 @@ The following workspace rules are STRICTLY ENFORCED for this project:
 JupyterLab 4 frontend extension that adds a context menu item to open the selected folder in a terminal. TypeScript/JavaScript frontend with Python packaging. Uses copier template for JupyterLab extensions.
 
 **Technology Stack**:
+
 - TypeScript for JupyterLab frontend extension
 - Python packaging via pyproject.toml and hatchling
 - Jest for unit tests
@@ -31,6 +32,7 @@ JupyterLab 4 frontend extension that adds a context menu item to open the select
 - jupyter-releaser CI/CD workflows
 
 **Package Names**:
+
 - npm: `jupyterlab_open_in_terminal_extension`
 - PyPI: `jupyterlab-open-in-terminal-extension` (underscores become hyphens)
 
