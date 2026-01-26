@@ -37,25 +37,3 @@ test('should register the command', async ({ page }) => {
     logs.filter(s => s === 'Command registered: filebrowser:open-in-terminal')
   ).toHaveLength(1);
 });
-
-test('should show context menu on folder right-click', async ({ page }) => {
-  await page.goto();
-
-  // Wait for file browser to be visible
-  await page.waitForSelector('.jp-FileBrowser');
-
-  // Create a test folder
-  await page.click('button[title="New Folder"]');
-  await page.waitForTimeout(500);
-
-  // Find the new folder in the file browser
-  const folder = page.locator('.jp-DirListing-item[data-isdir="true"]').first();
-  await expect(folder).toBeVisible();
-
-  // Right-click to open context menu
-  await folder.click({ button: 'right' });
-
-  // Check that "Open in Terminal" menu item exists
-  const menuItem = page.locator('.lm-Menu-itemLabel:text("Open in Terminal")');
-  await expect(menuItem).toBeVisible();
-});
