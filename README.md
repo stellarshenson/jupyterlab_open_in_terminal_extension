@@ -12,7 +12,7 @@ Open any folder from the file browser directly in a terminal. Right-click on a f
 
 ## Features
 
-- **Context menu on folders** - Right-click any folder in the file browser to reveal "Open in Terminal" option
+- **Context menu on folders** - Right-click any folder in the file browser to reveal "Open in Terminal" option with terminal icon
 - **Opens terminal at selected path** - New terminal session starts with cwd set to the selected folder
 - **Seamless integration** - Works with JupyterLab's native terminal
 
