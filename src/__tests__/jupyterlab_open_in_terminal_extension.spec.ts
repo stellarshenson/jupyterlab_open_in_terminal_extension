@@ -17,14 +17,13 @@ describe('jupyterlab_open_in_terminal_extension', () => {
     expect(pluginId).toContain(':plugin');
   });
 
-  it('should target directory items only', () => {
-    const selector = '.jp-DirListing-item[data-isdir="true"]';
-    expect(selector).toContain('data-isdir="true"');
-    expect(selector).toContain('.jp-DirListing-item');
+  it('should target file browser content area', () => {
+    const selector = '.jp-DirListing-content';
+    expect(selector).toBe('.jp-DirListing-content');
   });
 
   it('should have correct menu label', () => {
-    const label = 'Open in Terminal';
-    expect(label).toBe('Open in Terminal');
+    const label = 'Open Location in Terminal';
+    expect(label).toBe('Open Location in Terminal');
   });
 });

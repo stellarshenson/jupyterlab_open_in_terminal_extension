@@ -5,6 +5,7 @@ import {
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { showErrorMessage } from '@jupyterlab/apputils';
 import { terminalIcon } from '@jupyterlab/ui-components';
+import { PathExt } from '@jupyterlab/coreutils';
 
 /**
  * The command ID for opening a terminal at a directory.
@@ -29,45 +30,35 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     // Add the command
     commands.addCommand(COMMAND_ID, {
-      label: 'Open in Terminal',
-      caption: 'Open a terminal at this directory',
+      label: 'Open Location in Terminal',
+      caption: 'Open a terminal at this location',
       icon: terminalIcon,
       isVisible: () => {
-        // Only show for directories
-        const item = fileBrowser.selectedItems().next();
-        if (item.done || !item.value) {
-          return false;
-        }
-        return item.value.type === 'directory';
+        // Always visible - works for files, directories, and empty area
+        return true;
       },
       execute: async () => {
         const item = fileBrowser.selectedItems().next();
+
+        // Get the target path
+        let targetPath: string;
         if (item.done || !item.value) {
-          await showErrorMessage(
-            'No Selection',
-            'No folder selected in file browser.'
-          );
-          return;
+          // No selection - use current directory from file browser
+          targetPath = fileBrowser.model.path;
+        } else {
+          const selectedItem = item.value;
+          if (selectedItem.type === 'directory') {
+            targetPath = selectedItem.path;
+          } else {
+            // For files, get the parent directory
+            targetPath = PathExt.dirname(selectedItem.path);
+          }
         }
-
-        const selectedItem = item.value;
-
-        // Only allow directories
-        if (selectedItem.type !== 'directory') {
-          await showErrorMessage(
-            'Not a Directory',
-            'Please select a directory to open in terminal.'
-          );
-          return;
-        }
-
-        // Get the path - this is relative to the server root
-        const relativePath = selectedItem.path;
 
         try {
-          // Create a new terminal session with cwd set to the selected directory
+          // Create a new terminal session with cwd set to the target directory
           const session = await serviceManager.terminals.startNew({
-            cwd: relativePath
+            cwd: targetPath
           });
 
           // Create the terminal widget
@@ -83,22 +74,22 @@ const plugin: JupyterFrontEndPlugin<void> = {
           }
 
           console.log(
-            `Opened terminal "${session.name}" at path: ${relativePath}`
+            `Opened terminal "${session.name}" at path: ${targetPath}`
           );
         } catch (error) {
           console.error('Failed to open terminal:', error);
           await showErrorMessage(
             'Terminal Error',
-            `Failed to open terminal at: ${relativePath}\nError: ${error}`
+            `Failed to open terminal at: ${targetPath}\nError: ${error}`
           );
         }
       }
     });
 
-    // Add context menu item for directories in file browser
+    // Add context menu item for file browser (works for files, folders, and empty area)
     app.contextMenu.addItem({
       command: COMMAND_ID,
-      selector: '.jp-DirListing-item[data-isdir="true"]',
+      selector: '.jp-DirListing-content',
       rank: 3
     });
 
