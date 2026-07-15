@@ -1,6 +1,6 @@
 {
     "name": "jupyterlab_open_in_terminal_extension",
-    "version": "1.0.12",
+    "version": "1.0.14",
     "description": "Jupyterlab extension that complements the built-in Open in Terminal command, adding it for files and the empty file browser area",
     "keywords": [
         "jupyter",
