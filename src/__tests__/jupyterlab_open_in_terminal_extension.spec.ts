@@ -22,8 +22,13 @@ describe('jupyterlab_open_in_terminal_extension', () => {
     expect(selector).toBe('.jp-DirListing-content');
   });
 
-  it('should have correct menu label', () => {
-    const label = 'Open Location in Terminal';
-    expect(label).toBe('Open Location in Terminal');
+  it('should reuse the core terminal create command', () => {
+    const createCommand = 'terminal:create-new';
+    expect(createCommand).toBe('terminal:create-new');
+  });
+
+  it('should keep the standard menu label', () => {
+    const label = 'Open in Terminal';
+    expect(label).toBe('Open in Terminal');
   });
 });

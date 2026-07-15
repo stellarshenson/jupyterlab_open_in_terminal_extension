@@ -1,7 +1,7 @@
 {
     "name": "jupyterlab_open_in_terminal_extension",
-    "version": "1.0.10",
-    "description": "Jupyterlab extension that adds item to the context menu in the file browser to open folder in terminal",
+    "version": "1.0.12",
+    "description": "Jupyterlab extension that complements the built-in Open in Terminal command, adding it for files and the empty file browser area",
     "keywords": [
         "jupyter",
         "jupyterlab",

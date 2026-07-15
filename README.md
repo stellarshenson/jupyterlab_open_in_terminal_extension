@@ -11,15 +11,15 @@
 > [!TIP]
 > This extension is part of the [stellars_jupyterlab_extensions](https://github.com/stellarshenson/stellars_jupyterlab_extensions) metapackage. Install all Stellars extensions at once: `pip install stellars_jupyterlab_extensions`
 
-Open any folder or file from the file browser directly in a terminal. Right-click on a folder and select "Open Location in Terminal" to launch a new terminal session with that directory as the working directory. Right-click on a file to open a terminal in its parent folder.
+Open a terminal at any location in the file browser with a single right-click. JupyterLab already provides "Open in Terminal" for folders; this extension completes the picture by adding the same command, with the same label, for files and the empty file browser area.
 
 ![Open in Terminal](.resources/screenshot.png)
 
 ## Features
 
-- **Context menu on folders** - Right-click any folder to open a terminal at that location
 - **Context menu on files** - Right-click any file to open a terminal in its parent folder
-- **Opens terminal at selected path** - New terminal session starts with cwd set to the target folder
+- **Context menu on empty area** - Right-click empty space to open a terminal in the current folder
+- **Complements the built-in command** - Reuses JupyterLab's own "Open in Terminal" label and terminal command, so folders keep the native item and no duplicate appears
 - **Seamless integration** - Works with JupyterLab's native terminal
 
 ## Requirements

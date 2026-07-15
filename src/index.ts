@@ -8,9 +8,20 @@ import { terminalIcon } from '@jupyterlab/ui-components';
 import { PathExt } from '@jupyterlab/coreutils';
 
 /**
- * The command ID for opening a terminal at a directory.
+ * The command ID for opening a terminal from a file or the empty browser area.
+ *
+ * JupyterLab core already provides `terminal:open-folder-in-terminal` for
+ * folders (label "Open in Terminal"). This command complements it, reusing the
+ * same label and the core `terminal:create-new` command, for the two cases core
+ * does not cover: a selected file (opens its parent folder) and the empty file
+ * browser area (opens the current folder).
  */
 const COMMAND_ID = 'filebrowser:open-in-terminal';
+
+/**
+ * The core terminal creation command, reused to open the terminal.
+ */
+const CREATE_TERMINAL_COMMAND = 'terminal:create-new';
 
 /**
  * Initialization data for the jupyterlab_open_in_terminal_extension extension.
@@ -18,7 +29,7 @@ const COMMAND_ID = 'filebrowser:open-in-terminal';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab_open_in_terminal_extension:plugin',
   description:
-    'JupyterLab extension that adds context menu item to the file browser to open folder in terminal',
+    'Complements the built-in Open in Terminal command for files and the empty file browser area',
   autoStart: true,
   requires: [IDefaultFileBrowser],
   activate: (app: JupyterFrontEnd, fileBrowser: IDefaultFileBrowser) => {
@@ -28,65 +39,42 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     const { commands, serviceManager } = app;
 
-    // Add the command
+    // Match core behaviour: do nothing if terminals are not available
+    if (!serviceManager.terminals.isAvailable()) {
+      return;
+    }
+
     commands.addCommand(COMMAND_ID, {
-      label: 'Open Location in Terminal',
+      label: 'Open in Terminal',
       caption: 'Open a terminal at this location',
-      icon: terminalIcon,
+      icon: terminalIcon.bindprops({ stylesheet: 'menuItem' }),
       isVisible: () => {
-        // Always visible - works for files, directories, and empty area
-        return true;
+        // Complement core only: hide on directories, which core already covers.
+        // Shown for files and for the empty area (no selection).
+        const item = fileBrowser.selectedItems().next();
+        return item.done || !item.value || item.value.type !== 'directory';
       },
       execute: async () => {
         const item = fileBrowser.selectedItems().next();
 
-        // Get the target path
-        let targetPath: string;
-        if (item.done || !item.value) {
-          // No selection - use current directory from file browser
-          targetPath = fileBrowser.model.path;
-        } else {
-          const selectedItem = item.value;
-          if (selectedItem.type === 'directory') {
-            targetPath = selectedItem.path;
-          } else {
-            // For files, get the parent directory
-            targetPath = PathExt.dirname(selectedItem.path);
-          }
-        }
+        // Resolve the target directory relative to the server root
+        const targetPath =
+          item.done || !item.value
+            ? fileBrowser.model.path // empty area - current folder
+            : PathExt.dirname(item.value.path); // file - its parent folder
 
         try {
-          // Create a new terminal session with cwd set to the target directory
-          const session = await serviceManager.terminals.startNew({
-            cwd: targetPath
-          });
-
-          // Create the terminal widget
-          const terminal = await commands.execute('terminal:create-new', {
-            name: session.name
-          });
-
-          if (!terminal) {
-            // If terminal:create-new doesn't return the widget, try opening it
-            await commands.execute('terminal:open', {
-              name: session.name
-            });
-          }
-
-          console.log(
-            `Opened terminal "${session.name}" at path: ${targetPath}`
-          );
+          // Reuse the core terminal command, exactly as the stock folder command does
+          await commands.execute(CREATE_TERMINAL_COMMAND, { cwd: targetPath });
         } catch (error) {
-          console.error('Failed to open terminal:', error);
-          await showErrorMessage(
-            'Terminal Error',
-            `Failed to open terminal at: ${targetPath}\nError: ${error}`
-          );
+          await showErrorMessage('Failed to open new terminal', error as Error);
         }
       }
     });
 
-    // Add context menu item for file browser (works for files, folders, and empty area)
+    // Register only where core does not: files and the empty browser area.
+    // `.jp-DirListing-content` also matches folder items as an ancestor, but
+    // isVisible hides the command on directories so core's item stays unique.
     app.contextMenu.addItem({
       command: COMMAND_ID,
       selector: '.jp-DirListing-content',
