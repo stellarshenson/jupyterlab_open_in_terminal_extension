@@ -5,3 +5,4 @@ node_modules
 !/package.json
 package-lock.json
 jupyterlab_open_in_terminal_extension
+.claude
