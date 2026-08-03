@@ -4,8 +4,8 @@ import {
 } from '@jupyterlab/application';
 import { IDefaultFileBrowser } from '@jupyterlab/filebrowser';
 import { showErrorMessage } from '@jupyterlab/apputils';
+import { ITranslator } from '@jupyterlab/translation';
 import { terminalIcon } from '@jupyterlab/ui-components';
-import { PathExt } from '@jupyterlab/coreutils';
 
 /**
  * The command ID for opening a terminal from a file or the empty browser area.
@@ -13,8 +13,7 @@ import { PathExt } from '@jupyterlab/coreutils';
  * JupyterLab core already provides `terminal:open-folder-in-terminal` for
  * folders (label "Open in Terminal"). This command complements it, reusing the
  * same label and the core `terminal:create-new` command, for the two cases core
- * does not cover: a selected file (opens its parent folder) and the empty file
- * browser area (opens the current folder).
+ * does not cover: a selected file and the empty file browser area.
  */
 const COMMAND_ID = 'filebrowser:open-in-terminal';
 
@@ -24,6 +23,12 @@ const COMMAND_ID = 'filebrowser:open-in-terminal';
 const CREATE_TERMINAL_COMMAND = 'terminal:create-new';
 
 /**
+ * The file browser item class, used to tell an item click from an empty area
+ * click.
+ */
+const ITEM_CLASS = 'jp-DirListing-item';
+
+/**
  * Initialization data for the jupyterlab_open_in_terminal_extension extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
@@ -31,8 +36,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
   description:
     'Complements the built-in Open in Terminal command for files and the empty file browser area',
   autoStart: true,
-  requires: [IDefaultFileBrowser],
-  activate: (app: JupyterFrontEnd, fileBrowser: IDefaultFileBrowser) => {
+  requires: [IDefaultFileBrowser, ITranslator],
+  activate: (
+    app: JupyterFrontEnd,
+    fileBrowser: IDefaultFileBrowser,
+    translator: ITranslator
+  ) => {
     console.log(
       'JupyterLab extension jupyterlab_open_in_terminal_extension is activated!'
     );
@@ -44,30 +53,40 @@ const plugin: JupyterFrontEndPlugin<void> = {
       return;
     }
 
+    // Same catalogue as core, so both items render one translated label
+    const trans = translator.load('jupyterlab');
+
+    // `DirListing` leaves the selection untouched when the empty area is
+    // right-clicked, so the selection cannot distinguish an empty area click
+    // from an item click. Read the context menu event target instead.
+    const hitItem = () =>
+      app.contextMenuHitTest(node => node.classList.contains(ITEM_CLASS));
+
     commands.addCommand(COMMAND_ID, {
-      label: 'Open in Terminal',
-      caption: 'Open a terminal at this location',
+      label: trans.__('Open in Terminal'),
+      caption: trans.__('Open a terminal at this location'),
       icon: terminalIcon.bindprops({ stylesheet: 'menuItem' }),
       isVisible: () => {
-        // Complement core only: hide on directories, which core already covers.
-        // Shown for files and for the empty area (no selection).
-        const item = fileBrowser.selectedItems().next();
-        return item.done || !item.value || item.value.type !== 'directory';
+        const node = hitItem();
+        // Empty area - core registers nothing here
+        if (!node) {
+          return true;
+        }
+        // Complement core only: hide on directories, which core already covers
+        return node.dataset.isdir !== 'true';
       },
       execute: async () => {
-        const item = fileBrowser.selectedItems().next();
-
-        // Resolve the target directory relative to the server root
-        const targetPath =
-          item.done || !item.value
-            ? fileBrowser.model.path // empty area - current folder
-            : PathExt.dirname(item.value.path); // file - its parent folder
-
+        // A listing only ever renders children of its own path, so the current
+        // folder is the target for a file and for the empty area alike.
         try {
-          // Reuse the core terminal command, exactly as the stock folder command does
-          await commands.execute(CREATE_TERMINAL_COMMAND, { cwd: targetPath });
+          await commands.execute(CREATE_TERMINAL_COMMAND, {
+            cwd: fileBrowser.model.path
+          });
         } catch (error) {
-          await showErrorMessage('Failed to open new terminal', error as Error);
+          await showErrorMessage(
+            trans.__('Failed to open new terminal'),
+            error as Error
+          );
         }
       }
     });

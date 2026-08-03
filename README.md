@@ -24,7 +24,14 @@ Open a terminal at any location in the file browser with a single right-click. J
 
 ## Requirements
 
-- JupyterLab >= 4.0.0
+- JupyterLab >= 4.6.0
+
+> [!IMPORTANT]
+> JupyterLab 4.6.0 is the first release to ship the built-in
+> `terminal:open-folder-in-terminal` command, which this extension delegates the
+> folder case to. On earlier 4.x releases a folder right-click would show no
+> "Open in Terminal" item at all, so 4.6.0 is a hard floor rather than a
+> recommendation.
 
 ## Install
 

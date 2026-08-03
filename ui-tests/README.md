@@ -45,6 +45,14 @@ cd ./ui-tests
 jlpm playwright test
 ```
 
+The test server binds port 8888 and does not retry, so it will not start while your own
+JupyterLab is running there. Set `JUPYTER_TEST_PORT` to move both the server and the
+tests to another port:
+
+```sh
+JUPYTER_TEST_PORT=8899 jlpm playwright test
+```
+
 Test results will be shown in the terminal. In case of any test failures, the test report
 will be opened in your browser at the end of the tests execution; see
 [Playwright documentation](https://playwright.dev/docs/test-reporters#html-reporter)
@@ -122,7 +130,7 @@ jlpm start
 
 ```sh
 cd ./ui-tests
-jlpm playwright codegen localhost:8888
+jlpm playwright codegen "localhost:${JUPYTER_TEST_PORT:-8888}"
 ```
 
 ## Debug tests
