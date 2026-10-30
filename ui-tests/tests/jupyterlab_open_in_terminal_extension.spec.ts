@@ -19,7 +19,7 @@ test('should emit an activation console message', async ({ page }) => {
     logs.filter(
       s =>
         s ===
-        'JupyterLab extension jupyterlab_open_in_terminal_extension is activated!'
+        'JupyterLab extension @stellarshenson/jupyterlab-open-in-terminal-extension is activated!'
     )
   ).toHaveLength(1);
 });

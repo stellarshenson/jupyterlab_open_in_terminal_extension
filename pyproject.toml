@@ -48,8 +48,8 @@ artifacts = ["jupyterlab_open_in_terminal_extension/labextension"]
 exclude = [".github", "binder"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jupyterlab_open_in_terminal_extension/labextension" = "share/jupyter/labextensions/jupyterlab_open_in_terminal_extension"
-"install.json" = "share/jupyter/labextensions/jupyterlab_open_in_terminal_extension/install.json"
+"jupyterlab_open_in_terminal_extension/labextension" = "share/jupyter/labextensions/@stellarshenson/jupyterlab-open-in-terminal-extension"
+"install.json" = "share/jupyter/labextensions/@stellarshenson/jupyterlab-open-in-terminal-extension/install.json"
 
 [tool.hatch.build.hooks.version]
 path = "jupyterlab_open_in_terminal_extension/_version.py"

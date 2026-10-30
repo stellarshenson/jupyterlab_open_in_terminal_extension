@@ -12,5 +12,5 @@ except ImportError:
 def _jupyter_labextension_paths():
     return [{
         "src": "labextension",
-        "dest": "jupyterlab_open_in_terminal_extension"
+        "dest": "@stellarshenson/jupyterlab-open-in-terminal-extension"
     }]

@@ -67,7 +67,9 @@ function activate(options: { hit: HTMLElement | null; path?: string }) {
 
 describe('plugin metadata', () => {
   it('declares the expected id and dependencies', () => {
-    expect(plugin.id).toBe('jupyterlab_open_in_terminal_extension:plugin');
+    expect(plugin.id).toBe(
+      '@stellarshenson/jupyterlab-open-in-terminal-extension:plugin'
+    );
     expect(plugin.autoStart).toBe(true);
     expect(plugin.requires).toEqual(['IDefaultFileBrowser', 'ITranslator']);
   });

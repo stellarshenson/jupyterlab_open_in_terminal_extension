@@ -29,10 +29,10 @@ const CREATE_TERMINAL_COMMAND = 'terminal:create-new';
 const ITEM_CLASS = 'jp-DirListing-item';
 
 /**
- * Initialization data for the jupyterlab_open_in_terminal_extension extension.
+ * Initialization data for the @stellarshenson/jupyterlab-open-in-terminal-extension extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jupyterlab_open_in_terminal_extension:plugin',
+  id: '@stellarshenson/jupyterlab-open-in-terminal-extension:plugin',
   description:
     'Complements the built-in Open in Terminal command for files and the empty file browser area',
   autoStart: true,
@@ -43,7 +43,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     translator: ITranslator
   ) => {
     console.log(
-      'JupyterLab extension jupyterlab_open_in_terminal_extension is activated!'
+      'JupyterLab extension @stellarshenson/jupyterlab-open-in-terminal-extension is activated!'
     );
 
     const { commands, serviceManager } = app;
