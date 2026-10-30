@@ -6,3 +6,6 @@ node_modules
 package-lock.json
 jupyterlab_open_in_terminal_extension
 .claude
+eslint.config.mjs
+.venv
+.agents
