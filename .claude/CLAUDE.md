@@ -33,7 +33,7 @@ JupyterLab 4 frontend extension that adds a context menu item to open the select
 
 **Package Names**:
 
-- npm: `jupyterlab_open_in_terminal_extension`
+- npm: `@stellarshenson/jupyterlab-open-in-terminal-extension`
 - PyPI: `jupyterlab-open-in-terminal-extension` (underscores become hyphens)
 
 ## Strengthened Rules

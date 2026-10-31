@@ -12,6 +12,6 @@ labextension_name: '@stellarshenson/jupyterlab-open-in-terminal-extension'
 project_short_description: Jupyterlab extension that adds item to the context menu
     in the file browser to open folder in terminal
 python_name: jupyterlab_open_in_terminal_extension
-repository: ''
+repository: https://github.com/stellarshenson/jupyterlab_open_in_terminal_extension
 test: true
 
